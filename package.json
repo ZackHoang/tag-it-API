@@ -1,0 +1,39 @@
+{
+  "name": "tag-it-api",
+  "version": "1.0.0",
+  "description": "A photo tagging app. The API",
+  "type": "module",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "seed": "node ./prisma/seed.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ZackHoang/tag-it-API.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ZackHoang/tag-it-API/issues"
+  },
+  "homepage": "https://github.com/ZackHoang/tag-it-API#readme",
+  "dependencies": {
+    "@prisma/client": "^6.18.0",
+    "@quixo3/prisma-session-store": "^3.1.13",
+    "cors": "^2.8.5",
+    "dotenv": "^17.2.3",
+    "express": "^5.1.0",
+    "express-session": "^1.18.2",
+    "express-validator": "^7.3.0"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.38.0",
+    "eslint": "^9.38.0",
+    "globals": "^16.4.0",
+    "prettier": "3.6.2",
+    "prisma": "^6.18.0",
+    "supertest": "^7.1.4"
+  }
+}
