@@ -22,7 +22,7 @@ async function main() {
                 },
                 {
                     name: 'Ichigo',
-                    image: 'https://res.cloudinary.com/dazy1wrx0/image/upload/v1756415137/ken_dfydza.png',
+                    image: 'https://res.cloudinary.com/dazy1wrx0/image/upload/v1756415137/ichigo_kv69js.png',
                     top_left: {
                         x: 1725,
                         y: 709,
@@ -47,6 +47,7 @@ async function main() {
             ],
         },
     });
+    console.log("Seed complete");
 }
 
 main()

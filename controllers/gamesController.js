@@ -55,13 +55,13 @@ export async function checkCharacter(req, res) {
             return character.name === req.params.name;
         });
         const xNormalized =
-            req.body.x * (game.width / req.body.browser_image_width);
+            Math.floor(req.body.x * (game.width / req.body.browser_image_width));
         const yNormalized =
-            req.body.y * (game.height / req.body.browser_image_height);
+            Math.floor(req.body.y * (game.height / req.body.browser_image_height));
         if (
-            (xNormalized >= character.top_left.x ||
+            (xNormalized >= character.top_left.x &&
                 xNormalized <= character.bottom_right.x) &&
-            (yNormalized >= character.top_left.y ||
+            (yNormalized >= character.top_left.y &&
                 yNormalized <= character.bottom_right.y)
         ) {
             res.json(
@@ -76,7 +76,8 @@ export async function checkCharacter(req, res) {
                 })
             );
         }
-    } catch {
+    } catch (e) {
+        console.log(e);
         res.status(500).json(
             errorResponse('Oops! Something went wrong. Try again later.')
         );
