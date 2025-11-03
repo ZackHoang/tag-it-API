@@ -1,6 +1,6 @@
 import 'dotenv/config';
 import express from 'express';
-import timerRouter from './routers/timerRouter.js';
+// import timerRouter from './routers/timerRouter.js';
 import session from 'express-session';
 import { PrismaSessionStore } from '@quixo3/prisma-session-store';
 import prisma from './prisma/prisma.js';
@@ -12,7 +12,10 @@ import scoreRouter from './routers/scoreRouter.js';
 const app = express();
 const PORT = parseInt(process.env.PORT) || 3000;
 
-app.use(cors());
+app.use(cors({
+    origin: process.env.ORIGIN,
+    credentials: true,
+}));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(
@@ -21,8 +24,10 @@ app.use(
         resave: false,
         saveUninitialized: false,
         cookie: {
+            path: '/',
             maxAge: 1000 * 60 * 60 * 24,
             sameSite: false,
+            httpOnly: false,
         },
         name: 'tag-it',
         store: new PrismaSessionStore(prisma, {
@@ -37,7 +42,7 @@ app.use(
 //     console.log(req.session.id);
 //     next();
 // });
-app.use('/time', timerRouter);
+// app.use('/time', timerRouter);
 app.use('/games', gamesRouter);
 app.use('/score', scoreRouter);
 app.use('/{*splat}', (req, res) => {

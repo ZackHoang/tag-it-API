@@ -1,8 +1,8 @@
-import { Router } from 'express';
-import { getTimer } from '../controllers/timerController.js';
+// import { Router } from 'express';
+// import { getTimer } from '../controllers/timerController.js';
 
-const timerRouter = Router();
+// const timerRouter = Router();
 
-timerRouter.get('/', getTimer);
+// timerRouter.get('/', getTimer);
 
-export default timerRouter;
+// export default timerRouter;

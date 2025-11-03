@@ -20,7 +20,7 @@ export async function getAllGames(req, res) {
     }
 }
 
-export async function getGame(req, res) {
+export async function getGame(req, res, next) {
     try {
         const game = await prisma.game.findUnique({
             where: {
@@ -35,13 +35,24 @@ export async function getGame(req, res) {
         for (const character of game.characters) {
             delete character.top_left;
             delete character.bottom_right;
+            character.found = false;
+        }
+        if (!req.session.charactersFound) {
+            req.session.charactersFound = game.characters;
         }
         res.json(successResponse(game));
+        next();
     } catch {
         res.status(500).json(
             errorResponse('Oops! Something went wrong. Try again later.')
         );
     }
+}
+
+export function getTimer(req, res) {
+    const currentEpochTime = Date.now();
+    req.session.startTime = currentEpochTime;
+    console.log(req.session);
 }
 
 export async function checkCharacter(req, res) {
@@ -64,11 +75,28 @@ export async function checkCharacter(req, res) {
             (yNormalized >= character.top_left.y &&
                 yNormalized <= character.bottom_right.y)
         ) {
-            res.json(
-                successResponse({
-                    message: 'You found them!',
-                })
-            );
+            const charFound = false;
+            console.log(req.session);
+            req.session.charactersFound.forEach((char) => {
+                if (char.name === character.name) {
+                    if (char.found === true) {
+                        charFound = true;
+                    } else {
+                        char.found = true;
+                    }
+                }
+            });
+            if (charFound === true) {
+                res.json(failResponse({
+                    message: `You already found ${character.name}!`
+                }))
+            } else {
+                res.json(
+                    successResponse({
+                        message: `You found ${character.name}!`,
+                    })
+                );
+            }
         } else {
             res.json(
                 failResponse({
