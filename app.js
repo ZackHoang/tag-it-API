@@ -8,6 +8,8 @@ import gamesRouter from './routers/gamesRouter.js';
 import { failResponse } from './response/fail.js';
 import cors from 'cors';
 import scoreRouter from './routers/scoreRouter.js';
+import totalTimeRouter from './routers/totalTimeRouter.js';
+import leaderboardRouter from './routers/leaderboard.js';
 
 const app = express();
 const PORT = parseInt(process.env.PORT) || 3000;
@@ -25,7 +27,7 @@ app.use(
         saveUninitialized: false,
         cookie: {
             path: '/',
-            maxAge: 1000 * 60 * 60 * 24,
+            maxAge: 1000 * 3600,
             sameSite: false,
             httpOnly: false,
         },
@@ -44,7 +46,9 @@ app.use(
 // });
 // app.use('/time', timerRouter);
 app.use('/games', gamesRouter);
+app.use('/total-time', totalTimeRouter);
 app.use('/score', scoreRouter);
+app.use('/leaderboard', leaderboardRouter);
 app.use('/{*splat}', (req, res) => {
     res.status(404).json(failResponse({ message: 'Not Found' }));
 });

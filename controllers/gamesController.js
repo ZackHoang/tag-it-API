@@ -37,9 +37,7 @@ export async function getGame(req, res, next) {
             delete character.bottom_right;
             character.found = false;
         }
-        if (!req.session.charactersFound) {
-            req.session.charactersFound = game.characters;
-        }
+        req.session.charactersFound = game.characters;
         res.json(successResponse(game));
         next();
     } catch {
@@ -52,7 +50,9 @@ export async function getGame(req, res, next) {
 export function getTimer(req, res) {
     const currentEpochTime = Date.now();
     req.session.startTime = currentEpochTime;
-    console.log(req.session);
+    // console.log("/games/:id session object", req.session);
+    // console.log("/games/:id session id", req.session.id);
+    res.end();
 }
 
 export async function checkCharacter(req, res) {
@@ -75,28 +75,32 @@ export async function checkCharacter(req, res) {
             (yNormalized >= character.top_left.y &&
                 yNormalized <= character.bottom_right.y)
         ) {
-            const charFound = false;
-            console.log(req.session);
+            let charFoundAlready = false;
             req.session.charactersFound.forEach((char) => {
                 if (char.name === character.name) {
                     if (char.found === true) {
-                        charFound = true;
+                        charFoundAlready = true;
                     } else {
                         char.found = true;
                     }
                 }
             });
-            if (charFound === true) {
-                res.json(failResponse({
-                    message: `You already found ${character.name}!`
-                }))
+            const allCharFound = req.session.charactersFound.every((char) => char.found === true);
+            let response = null;
+            if (allCharFound === true) {
+                response = successResponse({
+                    message: 'You have found everyone'
+                })
+            } else if (charFoundAlready === true) {
+                response = failResponse({
+                    message: `You already found ${character.name}`
+                })
             } else {
-                res.json(
-                    successResponse({
-                        message: `You found ${character.name}!`,
-                    })
-                );
+                response = successResponse({
+                    message: `You found ${character.name}`
+                })
             }
+            res.json(response);
         } else {
             res.json(
                 failResponse({
@@ -104,8 +108,10 @@ export async function checkCharacter(req, res) {
                 })
             );
         }
+        // console.log("/games/:id/:name session object", req.session);
+        // console.log("/games/:id/:name session id", req.session.id);
     } catch (e) {
-        console.log(e);
+        console.error(e);
         res.status(500).json(
             errorResponse('Oops! Something went wrong. Try again later.')
         );
